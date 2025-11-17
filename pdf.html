@@ -13,6 +13,9 @@
     table { width: 100%; border-collapse: collapse; margin-top: 28px; font-size: 9px; }
     th { text-align: left; font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em; color: #080808; border: 1.5px solid #000; padding: 4px; background-color: #f2f2f2; }
     td { padding: 6px; font-size: 8px; border: 1.5px solid #000; }
+    /* Make very top and very bottom borders stronger so they don't look faint in PDF */
+    thead tr:first-child th { border-top: 2px solid #000; }
+    tbody tr:last-child td { border-bottom: 2px solid #000; }
     th:nth-child(4), td:nth-child(4) { width: 8%; }
     th:first-child, td:first-child { border-left: none; }
     th:last-child, td:last-child { border-right: none; }
@@ -42,6 +45,43 @@
     .invoice-meta { text-align: right; font-size: 9px; }
     .invoice-meta-row { display: flex; justify-content:space-between; align-items: center; border-bottom: 1px solid #e2e8f0; padding: 4px; }
     .invoice-meta-row:last-child { border-bottom: none; }
+
+    /* Extra totals separator line (dark) below main totals */
+    .totals-separator {
+      border-top: 2px solid #000;
+      width: 100%;
+    }
+
+    /* Tax breakup table with only horizontal (row) borders and 60% total width */
+    .tax-breakup-table {
+      width: 90%;
+      margin-top: 0px;
+      border-collapse: collapse;
+      font-size: 6.5px;
+    }
+    .tax-breakup-table th,
+    .tax-breakup-table td {
+      border-left: none;
+      border-right: none;
+      border-bottom: 1px solid #000;
+      padding: 4px 6px;
+      font-size: 6.5px;
+    }
+    /* First row (header) background normal white + smaller height for tax-breakup table */
+    .tax-breakup-table thead th {
+      background-color: #ffffff;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      line-height: 1.1;
+    }
+    /* Remove only the very top border of the tax-breakup table */
+    .tax-breakup-table thead tr:first-child th {
+      border-top: none !important;
+    }
+    .tax-breakup-table th:first-child,
+    .tax-breakup-table td:first-child {
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -131,6 +171,41 @@
       <div><span>IGST (18%)</span><strong>₹126.00</strong></div>
       <div><span>Total Amount</span><strong>₹826.00</strong></div>
     </div>
+
+    <div class="totals-separator"></div>
+
+    <table class="tax-breakup-table">
+      <thead>
+        <tr>
+          <th style="width:10%;">Tax Rate</th>
+          <th style="width:10%;">Taxable Amount (₹)</th>
+          <th style="width:10%;">CGST %</th>
+          <th style="width:10%;">CGST (₹)</th>
+          <th style="width:10%;">SGST %</th>
+          <th style="width:10%;">SGST (₹)</th>
+          <th style="width:10%;">Total Tax (₹)</th>
+          <th style="width:10%;"> </th>
+          <th style="width:10%;"> </th>
+          <th style="width:10%;"> </th>
+          
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>18%</td>
+          <td>₹700.00</td>
+          <td>0%</td>
+          <td>₹0.00</td>
+          <td>18%</td>
+          <td>₹126.00</td>
+          <td>₹126.00</td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+          
+        </tr>
+      </tbody>
+    </table>
 
     <div class="notes">
       Notes / Terms: Goods sold can't be returned.
