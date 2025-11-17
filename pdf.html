@@ -65,7 +65,11 @@
       border-right: none;
       border-bottom: 1px solid #000;
       padding: 4px 6px;
-      font-size: 6.5px;
+      font-size: 8px;
+    }
+    /* Remove bottom border from last row of tax-breakup table */
+    .tax-breakup-table tbody tr:last-child td {
+      border-bottom: 1px solid #000;
     }
     /* First row (header) background normal white + smaller height for tax-breakup table */
     .tax-breakup-table thead th {
@@ -82,6 +86,37 @@
     .tax-breakup-table td:first-child {
       text-align: left;
     }
+
+    .amount-in-words {
+      margin-top: 8px;
+      font-size: 9px;
+    }
+
+    .amount-in-words strong {
+      font-weight: 600;
+    }
+
+    .full-width-line {
+      margin-top: 4px;
+      border-top: 1px solid #bcbcbc;
+      width: 100%;
+    }
+
+    .signature-block {
+      margin-top: 16px;
+      text-align: right;
+      font-size: 8px;
+      line-height: 1.4;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      text-align: left;
+      font-size: 8px;
+      line-height: 1.4;
+    }
+
+    
   </style>
 </head>
 <body>
@@ -98,11 +133,11 @@
 
     <div class="flex flex-align-start">
       <div>
-        <div class="logo">Edistera aditya Dev</div>
-        <div class="muted mt-8">164, Sarojini Nagar, New Delhi</div>
-        <div class="muted">Delhi - 110023</div>
-        <div class="muted">Phone: +91 9873293692</div>
-        <div class="muted">GSTIN: 09AAGCE6536L1Z7</div>
+        <div class="logo">{{company.name}}</div>
+        <div class="muted mt-8">{{company.address}}</div>
+        <div class="muted">{{company.city}}</div>
+        <div class="muted">Phone: {{company.phone}}</div>
+        <div class="muted">GSTIN: {{company.gstin}}</div>
       </div>
       
     </div>
@@ -111,29 +146,26 @@
       <div class="grid-bill-ship bill-ship-details">
         <div>
           <p class="section-title">Bill To</p>
-          <div>DC Enterprises</div>
-          <div class="muted">C 174, Sarojini Nagar, Pharenda, Noida</div>
-          <div class="muted">Uttar Pradesh - 273155</div>
-          <div class="muted">Ph: +91 9125918398</div>
-          <div class="muted">GSTIN: 09AAGCE6536L1Z7</div>
-          <div class="muted">State: Uttar Pradesh</div>
-          <div class="muted">State Code: 9</div>
+          <div>{{billTo.name}}</div>
+          <div class="muted">{{billTo.address}}</div>
+          <div class="muted">{{billTo.city}}</div>
+          <div class="muted">Ph: {{billTo.phone}}</div>
+          <div class="muted">GSTIN: {{billTo.gstin}}</div>
         </div>
         <div>
           <p class="section-title">Ship To</p>
-          <div>DC Enterprises</div>
-          <div class="muted">C 174, Sarojini Nagar, Pharenda, Noida</div>
-          <div class="muted">Uttar Pradesh - 273155</div>
-          <div class="muted">Ph: +91 9125918398</div>
-          <div class="muted">GSTIN: 09AAGCE6536L1Z7</div>
-          <div class="muted">State: Uttar Pra</div>
+          <div>{{shipTo.name}}</div>
+          <div class="muted">{{shipTo.address}}</div>
+          <div class="muted">{{shipTo.city}}</div>
+          <div class="muted">Ph: {{shipTo.phone}}</div>
+          <div class="muted">GSTIN: {{shipTo.gstin}}</div>
         </div>
       </div>
       <div class="invoice-meta">
-        <div class="invoice-meta-row"><span>Invoice #</span><span>85</span></div>
-        <div class="invoice-meta-row"><span>Invoice Date</span><span>17 Jun, 2025</span></div>
-        <div class="invoice-meta-row"><span>Payment Method</span><span>Pay on Delivery</span></div>
-        <div class="invoice-meta-row"><span>Due Amount</span><span>₹826.00</span></div>
+        <div class="invoice-meta-row"><span>Invoice #</span><span>{{invoice.number}}</span></div>
+        <div class="invoice-meta-row"><span>Invoice Date</span><span>{{invoice.date}}</span></div>
+        <div class="invoice-meta-row"><span>Payment Method</span><span>{{invoice.paymentMethod}}</span></div>
+        <div class="invoice-meta-row"><span>Due Amount</span><span>{{invoice.dueAmount}}</span></div>
       </div>
     </div>
 
@@ -142,34 +174,31 @@
         <tr><th>#</th><th id="col-item">item</th><th>HSN</th><th>Qty</th><th>Tax</th><th>Price</th><th id="col-total">Total</th></tr>
       </thead>
       <tbody>
+        {{#each items}}
         <tr>
-          <td>1</td>
-          
-          <td class="col-item">Halonix Meter Waterproof Rope Light with 120 Led/Mete
-            (Halonix 10 Meter Waterproof Rope Light with 120
-            Led/Mete)</td>
+          <td>{{add @index 1}}</td>
+          <td class="col-item">{{this.description}}</td>
           <td></td>
-          <td>1</td>
+          <td>{{this.qty}}</td>
           <td>18%</td>
-          <td>₹700.00</td>
-          <td class="col-total">₹700.00</td>
+          <td>{{this.price}}</td>
+          <td class="col-total">{{this.total}}</td>
         </tr>
+        {{/each}}
         <tr>
           <td colspan="3" class="table-total-label">Total</td>
           <td></td>
           <td></td>
           <td></td>
-          <td class="col-total">₹826.00</td>
-          
-          
+          <td class="col-total">{{totals.total}}</td>
         </tr>
       </tbody>
     </table>
 
     <div class="totals">
-      <div><span>Net Taxable Amount</span><strong>₹700.00</strong></div>
-      <div><span>IGST (18%)</span><strong>₹126.00</strong></div>
-      <div><span>Total Amount</span><strong>₹826.00</strong></div>
+      <div><span>Net Taxable Amount</span><strong>{{totals.net}}</strong></div>
+      <div><span>IGST (18%)</span><strong>{{totals.igst}}</strong></div>
+      <div><span>Total Amount</span><strong>{{totals.total}}</strong></div>
     </div>
 
     <div class="totals-separator"></div>
@@ -193,12 +222,12 @@
       <tbody>
         <tr>
           <td>18%</td>
-          <td>₹700.00</td>
+          <td>{{totals.net}}</td>
           <td>0%</td>
           <td>₹0.00</td>
           <td>18%</td>
-          <td>₹126.00</td>
-          <td>₹126.00</td>
+          <td>{{totals.igst}}</td>
+          <td>{{totals.igst}}</td>
           <td> </td>
           <td> </td>
           <td> </td>
@@ -207,9 +236,24 @@
       </tbody>
     </table>
 
-    <div class="notes">
-      Notes / Terms: Goods sold can't be returned.
+    <div class="amount-in-words">
+      <strong>Total Amount (In Words):</strong> {{totals.inWords}}
     </div>
+    <div class="full-width-line"></div>
+
+    <div class="signature-block">
+      <div>For Edistera Demo Pvt Ltd</div>
+      <div>Authorised Signatory</div>
+    </div>
+
+    <div class="footer-note">
+      <div><strong>Terms &amp; Conditions</strong></div>
+      <div>{{notes}}</div>
+    </div>
+
+    
+
+    <div class="full-width-line"></div>
   </div>
 </body>
 </html>

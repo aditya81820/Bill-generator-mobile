@@ -284,8 +284,13 @@ document.getElementById("downloadBtn").addEventListener("click", async () => {
     if (!response.ok) {
       throw new Error('Failed to load pdf.html');
     }
-    const htmlContent = await response.text();
-    await downloadCustomPDF(title, htmlContent);
+    const htmlTemplate = await response.text();
+
+    // Compile pdf.html as a Handlebars template and inject latest invoice data
+    const pdfTpl = Handlebars.compile(htmlTemplate);
+    const filledHtml = pdfTpl(activeData);
+
+    await downloadCustomPDF(title, filledHtml);
   } catch (err) {
     console.error('Failed to download PDF', err);
     alert('Unable to generate PDF. Please try again.');
