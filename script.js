@@ -64,24 +64,6 @@ const invoiceTpl = Handlebars.compile(templateSource);
 window.latestInvoiceData = window.latestInvoiceData || JSON.parse(JSON.stringify(defaultData));
 window.latestInvoiceHtml = window.latestInvoiceHtml || invoiceTpl(window.latestInvoiceData);
 
-function formToObject(formElement) {
-  const data = {};
-  new FormData(formElement).forEach((value, key) => {
-    const parts = key.split('.');
-    let cur = data;
-    for (let i = 0; i < parts.length; i++) {
-      const p = parts[i];
-      if (i === parts.length - 1) {
-        cur[p] = value;
-      } else {
-        cur[p] = cur[p] || {};
-        cur = cur[p];
-      }
-    }
-  });
-  return data;
-}
-
 function createItemRow(item = {}) {
   const wrapper = document.createElement('div');
   wrapper.className = 'item-row';
@@ -286,7 +268,6 @@ document.getElementById("downloadBtn").addEventListener("click", async () => {
     }
     const htmlTemplate = await response.text();
 
-    // Compile pdf.html as a Handlebars template and inject latest invoice data
     const pdfTpl = Handlebars.compile(htmlTemplate);
     const filledHtml = pdfTpl(activeData);
 

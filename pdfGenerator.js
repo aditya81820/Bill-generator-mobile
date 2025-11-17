@@ -48,7 +48,6 @@ export async function downloadCustomPDF(title, htmlContent) {
   try {
     const wrappers = container.querySelectorAll('.invoice-wrapper');
 
-    // If we don't find individual invoice wrappers, fall back to rendering whole container
     const targets = wrappers.length ? Array.from(wrappers) : [container];
 
     const pdf = new JsPDF({
