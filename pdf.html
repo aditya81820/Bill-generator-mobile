@@ -5,7 +5,20 @@
   <title>PDF Template</title>
   <style>
     body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 24px; background: #f9fafb; color: #111; }
-    .invoice-wrapper { max-width: 720px; margin: 0 auto; background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 32px; }
+    .invoice-wrapper {
+      max-width: 720px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 32px;
+      page-break-after: always;
+      break-after: page;
+    }
+    .invoice-wrapper:last-of-type {
+      page-break-after: auto;
+      break-after: auto;
+    }
     .logo { font-size: 12px; font-weight: 600;}
     .flex { display: flex; justify-content: space-between;align-items: center; gap: 24px; }
     .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 15px; }
@@ -255,6 +268,271 @@
 
     <div class="full-width-line"></div>
   </div>
+
+  <!-- Duplicate for Transporter -->
+  <div class="invoice-wrapper">
+    <div class="flex flex-top">
+      <div>
+        <img src="company.webp" alt="Company Logo" class="logo-image">
+      </div>
+      <div class="text-right">
+        <div class="tax-title">Tax Invoice</div>
+        <div class="muted tax-subtitle">(Duplicate for Transporter)</div>
+      </div>
+    </div>
+
+    <div class="flex flex-align-start">
+      <div>
+        <div class="logo">{{company.name}}</div>
+        <div class="muted mt-8">{{company.address}}</div>
+        <div class="muted">{{company.city}}</div>
+        <div class="muted">Phone: {{company.phone}}</div>
+        <div class="muted">GSTIN: {{company.gstin}}</div>
+      </div>
+    </div>
+
+    <div class="grid-2 grid-spacing">
+      <div class="grid-bill-ship bill-ship-details">
+        <div>
+          <p class="section-title">Bill To</p>
+          <div>{{billTo.name}}</div>
+          <div class="muted">{{billTo.address}}</div>
+          <div class="muted">{{billTo.city}}</div>
+          <div class="muted">Ph: {{billTo.phone}}</div>
+          <div class="muted">GSTIN: {{billTo.gstin}}</div>
+        </div>
+        <div>
+          <p class="section-title">Ship To</p>
+          <div>{{shipTo.name}}</div>
+          <div class="muted">{{shipTo.address}}</div>
+          <div class="muted">{{shipTo.city}}</div>
+          <div class="muted">Ph: {{shipTo.phone}}</div>
+          <div class="muted">GSTIN: {{shipTo.gstin}}</div>
+        </div>
+      </div>
+      <div class="invoice-meta">
+        <div class="invoice-meta-row"><span>Invoice #</span><span>{{invoice.number}}</span></div>
+        <div class="invoice-meta-row"><span>Invoice Date</span><span>{{invoice.date}}</span></div>
+        <div class="invoice-meta-row"><span>Payment Method</span><span>{{invoice.paymentMethod}}</span></div>
+        <div class="invoice-meta-row"><span>Due Amount</span><span>{{invoice.dueAmount}}</span></div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th id="col-item">item</th><th>HSN</th><th>Qty</th><th>Tax</th><th>Price</th><th id="col-total">Total</th></tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+        <tr>
+          <td>{{add @index 1}}</td>
+          <td class="col-item">{{this.description}}</td>
+          <td></td>
+          <td>{{this.qty}}</td>
+          <td>18%</td>
+          <td>{{this.price}}</td>
+          <td class="col-total">{{this.total}}</td>
+        </tr>
+        {{/each}}
+        <tr>
+          <td colspan="3" class="table-total-label">Total</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="col-total">{{totals.total}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div><span>Net Taxable Amount</span><strong>{{totals.net}}</strong></div>
+      <div><span>IGST (18%)</span><strong>{{totals.igst}}</strong></div>
+      <div><span>Total Amount</span><strong>{{totals.total}}</strong></div>
+    </div>
+
+    <div class="totals-separator"></div>
+
+    <table class="tax-breakup-table">
+      <thead>
+        <tr>
+          <th style="width:10%;">Tax Rate</th>
+          <th style="width:10%;">Taxable Amount (₹)</th>
+          <th style="width:10%;">CGST %</th>
+          <th style="width:10%;">CGST (₹)</th>
+          <th style="width:10%;">SGST %</th>
+          <th style="width:10%;">SGST (₹)</th>
+          <th style="width:10%;">Total Tax (₹)</th>
+          <th style="width:10%;"> </th>
+          <th style="width:10%;"> </th>
+          <th style="width:10%;"> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>18%</td>
+          <td>{{totals.net}}</td>
+          <td>0%</td>
+          <td>₹0.00</td>
+          <td>18%</td>
+          <td>{{totals.igst}}</td>
+          <td>{{totals.igst}}</td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="amount-in-words">
+      <strong>Total Amount (In Words):</strong> {{totals.inWords}}
+    </div>
+    <div class="full-width-line"></div>
+
+    <div class="signature-block">
+      <div>For Edistera Demo Pvt Ltd</div>
+      <div>Authorised Signatory</div>
+    </div>
+
+    <div class="footer-note">
+      <div><strong>Terms &amp; Conditions</strong></div>
+      <div>{{notes}}</div>
+    </div>
+
+    <div class="full-width-line"></div>
+  </div>
+
+  <!-- Triplicate for Supplier -->
+  <div class="invoice-wrapper">
+    <div class="flex flex-top">
+      <div>
+        <img src="company.webp" alt="Company Logo" class="logo-image">
+      </div>
+      <div class="text-right">
+        <div class="tax-title">Tax Invoice</div>
+        <div class="muted tax-subtitle">(Triplicate for Supplier)</div>
+      </div>
+    </div>
+
+    <div class="flex flex-align-start">
+      <div>
+        <div class="logo">{{company.name}}</div>
+        <div class="muted mt-8">{{company.address}}</div>
+        <div class="muted">{{company.city}}</div>
+        <div class="muted">Phone: {{company.phone}}</div>
+        <div class="muted">GSTIN: {{company.gstin}}</div>
+      </div>
+    </div>
+
+    <div class="grid-2 grid-spacing">
+      <div class="grid-bill-ship bill-ship-details">
+        <div>
+          <p class="section-title">Bill To</p>
+          <div>{{billTo.name}}</div>
+          <div class="muted">{{billTo.address}}</div>
+          <div class="muted">{{billTo.city}}</div>
+          <div class="muted">Ph: {{billTo.phone}}</div>
+          <div class="muted">GSTIN: {{billTo.gstin}}</div>
+        </div>
+        <div>
+          <p class="section-title">Ship To</p>
+          <div>{{shipTo.name}}</div>
+          <div class="muted">{{shipTo.address}}</div>
+          <div class="muted">{{shipTo.city}}</div>
+          <div class="muted">Ph: {{shipTo.phone}}</div>
+          <div class="muted">GSTIN: {{shipTo.gstin}}</div>
+        </div>
+      </div>
+      <div class="invoice-meta">
+        <div class="invoice-meta-row"><span>Invoice #</span><span>{{invoice.number}}</span></div>
+        <div class="invoice-meta-row"><span>Invoice Date</span><span>{{invoice.date}}</span></div>
+        <div class="invoice-meta-row"><span>Payment Method</span><span>{{invoice.paymentMethod}}</span></div>
+        <div class="invoice-meta-row"><span>Due Amount</span><span>{{invoice.dueAmount}}</span></div>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>#</th><th id="col-item">item</th><th>HSN</th><th>Qty</th><th>Tax</th><th>Price</th><th id="col-total">Total</th></tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+        <tr>
+          <td>{{add @index 1}}</td>
+          <td class="col-item">{{this.description}}</td>
+          <td></td>
+          <td>{{this.qty}}</td>
+          <td>18%</td>
+          <td>{{this.price}}</td>
+          <td class="col-total">{{this.total}}</td>
+        </tr>
+        {{/each}}
+        <tr>
+          <td colspan="3" class="table-total-label">Total</td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="col-total">{{totals.total}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="totals">
+      <div><span>Net Taxable Amount</span><strong>{{totals.net}}</strong></div>
+      <div><span>IGST (18%)</span><strong>{{totals.igst}}</strong></div>
+      <div><span>Total Amount</span><strong>{{totals.total}}</strong></div>
+    </div>
+
+    <div class="totals-separator"></div>
+
+    <table class="tax-breakup-table">
+      <thead>
+        <tr>
+          <th style="width:10%;">Tax Rate</th>
+          <th style="width:10%;">Taxable Amount (₹)</th>
+          <th style="width:10%;">CGST %</th>
+          <th style="width:10%;">CGST (₹)</th>
+          <th style="width:10%;">SGST %</th>
+          <th style="width:10%;">SGST (₹)</th>
+          <th style="width:10%;">Total Tax (₹)</th>
+          <th style="width:10%;"> </th>
+          <th style="width:10%;"> </th>
+          <th style="width:10%;"> </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>18%</td>
+          <td>{{totals.net}}</td>
+          <td>0%</td>
+          <td>₹0.00</td>
+          <td>18%</td>
+          <td>{{totals.igst}}</td>
+          <td>{{totals.igst}}</td>
+          <td> </td>
+          <td> </td>
+          <td> </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="amount-in-words">
+      <strong>Total Amount (In Words):</strong> {{totals.inWords}}
+    </div>
+    <div class="full-width-line"></div>
+
+    <div class="signature-block">
+      <div>For Edistera Demo Pvt Ltd</div>
+      <div>Authorised Signatory</div>
+    </div>
+
+    <div class="footer-note">
+      <div><strong>Terms &amp; Conditions</strong></div>
+      <div>{{notes}}</div>
+    </div>
+
+    <div class="full-width-line"></div>
+  </div>
+
 </body>
 </html>
 

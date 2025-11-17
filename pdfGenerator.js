@@ -46,13 +46,10 @@ export async function downloadCustomPDF(title, htmlContent) {
   const container = createHiddenContainer(htmlContent);
 
   try {
-    const canvas = await html2canvas(container, {
-      scale: DEFAULT_SCALE,
-      useCORS: true,
-      logging: false
-    });
+    const wrappers = container.querySelectorAll('.invoice-wrapper');
 
-    const imgData = canvas.toDataURL('image/png');
+    // If we don't find individual invoice wrappers, fall back to rendering whole container
+    const targets = wrappers.length ? Array.from(wrappers) : [container];
 
     const pdf = new JsPDF({
       orientation: 'p',
@@ -64,20 +61,28 @@ export async function downloadCustomPDF(title, htmlContent) {
     const pageWidth = pdf.internal.pageSize.getWidth();
     const pageHeight = pdf.internal.pageSize.getHeight();
 
-    const imgWidth = pageWidth;
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let isFirstPage = true;
 
-    let heightLeft = imgHeight;
-    let position = 0;
+    for (const target of targets) {
+      const canvas = await html2canvas(target, {
+        scale: DEFAULT_SCALE,
+        useCORS: true,
+        logging: false
+      });
 
-    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-    heightLeft -= pageHeight;
+      const imgData = canvas.toDataURL('image/png');
 
-    while (heightLeft > 0) {
-      position = heightLeft - imgHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+      const imgWidth = pageWidth;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+      if (!isFirstPage) {
+        pdf.addPage();
+      }
+      isFirstPage = false;
+
+      // Draw each invoice on its own page, anchored at top
+      const y = 0;
+      pdf.addImage(imgData, 'PNG', 0, y, imgWidth, imgHeight);
     }
 
     pdf.save(`${title}.pdf`);
