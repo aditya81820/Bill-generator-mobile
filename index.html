@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Invoice Builder — Mobile Preview + A4 PDF</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/handlebars@4.7.7/dist/handlebars.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="app">
+    <main id="formArea" class="mobile-card">
+      <h2>Invoice Form</h2>
+
+      <form id="invoiceForm">
+        <section class="section">
+          <h3>Company (From)</h3>
+          <input name="company.name" placeholder="Company name" value="Demo Inc." />
+          <input name="company.address" placeholder="Address" value="164, Sarojini Nagar, New Delhi" />
+          <input name="company.city" placeholder="City, Pincode" value="Delhi - 110023" />
+          <input name="company.phone" placeholder="Phone" value="+91 9873293692" />
+          <input name="company.email" placeholder="Email" value="gauravrana.dce@gmail.com" />
+          <input name="company.gstin" placeholder="GSTIN" value="09AAGCE6536L1Z7" />
+        </section>
+
+        <section class="section two-cols">
+          <div>
+            <h3>Bill To</h3>
+            <input name="billTo.name" placeholder="Name" value="DC Enterprises" />
+            <input name="billTo.address" placeholder="Address" value="C 174, Sarojini Nagar, Pharenda, Noida" />
+            <input name="billTo.city" placeholder="City, Pincode" value="Uttar Pradesh - 273155" />
+            <input name="billTo.phone" placeholder="Phone" value="+91 9125918398" />
+            <input name="billTo.gstin" placeholder="GSTIN" value="09AAGCE6536L1Z7" />
+          </div>
+          <div>
+            <h3>Ship To</h3>
+            <input name="shipTo.name" placeholder="Name" value="DC Enterprises" />
+            <input name="shipTo.address" placeholder="Address" value="C 174, Sarojini Nagar, Pharenda, Noida" />
+            <input name="shipTo.city" placeholder="City, Pincode" value="Uttar Pradesh - 273155" />
+            <input name="shipTo.phone" placeholder="Phone" value="+91 9125918398" />
+            <input name="shipTo.gstin" placeholder="GSTIN" value="09AAGCE6536L1Z7" />
+          </div>
+        </section>
+
+        <section class="section">
+          <h3>Invoice Details</h3>
+          <input name="invoice.number" placeholder="Invoice #" value="85" />
+          <input name="invoice.date" type="date" value="2025-06-17" />
+          <input name="invoice.paymentMethod" placeholder="Payment Method" value="Pay on Delivery" />
+          <input name="invoice.dueAmount" placeholder="Due Amount" value="₹826.00" />
+        </section>
+
+        <section class="section">
+          <h3>Items</h3>
+          <div id="itemsContainer"></div>
+          <div class="item-controls">
+            <button id="addItemBtn" type="button" class="btn">+ Add item</button>
+          </div>
+        </section>
+
+        <section class="section">
+          <h3>Footer</h3>
+          <textarea name="notes" placeholder="Notes / Terms">Good sold cant be returned</textarea>
+        </section>
+
+        <div class="actions">
+          <button id="previewBtn" type="button" class="btn primary">Preview Bill</button>
+          <button id="resetBtn" type="reset" class="btn">Reset</button>
+        </div>
+      </form>
+    </main>
+
+    <aside id="previewArea" class="mobile-card hidden">
+      <div class="preview-header">
+        <div class="header-content">
+          <span class="company-name">Edistera Demo Dev</span>
+          <div class="header-icons">
+            <a href="tel:+919873293692" class="header-icon" title="Call">
+              <i class="fas fa-phone"></i>
+            </a>
+            <a href="mailto:gauravrana.dce@gmail.com" class="header-icon" title="Email">
+              <i class="fas fa-envelope"></i>
+            </a>
+            <button id="downloadBtn" class="header-icon-btn" title="Download PDF">
+              <i class="fas fa-download"></i>
+            </button>
+            <p>
+                Download
+            </p>
+            <button id="editBtn" class="header-icon-btn" title="Edit">
+              <i class="fas fa-edit"></i>
+            </button>
+            <p>
+                Edit
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div id="invoicePreviewWrapper" class="preview-scroll">
+      </div>
+    </aside>
+  </div>
+
+  <script id="invoice-template" type="text/x-handlebars-template">
+    <div class="invoice mobile-invoice">
+      <div class="inv-header">
+        <img src="https://static-dev.edistera.com/66e024dd56427a405b7d8fce/images/organisation_logo/full/fbbc8a0d-cc73-453d-bdff-3dd22339997e_screenshot-2025-07-02-at-4.10.49-pm.webp" alt="Logo">
+        <div class="inv-company">
+          <strong>{{company.name}}</strong>
+          <div>{{company.address}}</div>
+          <div>{{company.city}}</div>
+          <div data-label="Phone: ">{{company.phone}}</div>
+          <div data-label="Email: ">{{company.email}}</div>
+          <div data-label="GSTIN: ">{{company.gstin}}</div>
+        </div>
+      </div>
+
+      <h4 class="center">Tax Invoice</h4>
+
+      <div class="inv-block two-cols small">
+        <div>
+          <strong>Bill To</strong>
+          <div>{{billTo.name}}</div>
+          <div>{{billTo.address}}</div>
+          <div>{{billTo.city}}</div>
+          <div><strong>Phone:</strong> {{billTo.phone}}</div>
+          <div><strong>GSTIN:</strong> {{billTo.gstin}}</div>
+        </div>
+        <div>
+          <strong>Ship To</strong>
+          <div>{{shipTo.name}}</div>
+          <div>{{shipTo.address}}</div>
+          <div>{{shipTo.city}}</div>
+          <div><strong>Phone:</strong> {{shipTo.phone}}</div>
+          <div><strong>GSTIN:</strong> {{shipTo.gstin}}</div>
+        </div>
+      </div>
+
+      <div class="meta-col two-cols small">
+        <div class="meta-row">
+            <div><div><strong>Invoice #: </strong></div><div>{{invoice.number}}</div></div>
+            <div><div><strong>Invoice Date: </strong></div><div>{{invoice.date}}</div></div>
+        </div>
+        <div class="meta-row">
+            <div><div><strong>Payment Method: </strong></div><div>{{invoice.paymentMethod}}</div></div>
+            <div><div><strong>Due Amount: </strong></div><div>{{invoice.dueAmount}}</div></div>
+        </div>
+      </div>
+
+      <table class="items-table">
+        <thead>
+          <tr><th>#</th><th>Item</th><th>Qty</th><th>Price</th><th>Total</th></tr>
+        </thead>
+        <tbody>
+          {{#each items}}
+            <tr>
+              <td>{{add @index 1}}</td>
+              <td class="item-desc">{{this.description}}</td>
+              <td>{{this.qty}}</td>
+              <td>{{this.price}}</td>
+              <td>{{this.total}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+
+      <div class="totals">
+        <div class="meta-row pd-left">
+            <div>Net Taxable Amount: </div>
+            <div><strong>{{totals.net}}</strong></div>
+        </div>
+        <div class="meta-row pd-left"><div>IGST: </div><div><strong>{{totals.igst}}</strong></div></div>
+        <div class="meta-row pd-left"><div>Total Amount: </div><div><strong>{{totals.total}}</strong></div></div>
+      </div>
+      <div class="sign-line"></div>
+
+      <div class="in-words"><strong>Total Amount (in words):</strong> {{totals.inWords}}</div>
+
+      <div class="signature"><div class="sign-line">Thank you for the business!</div></div>
+
+      <div class="terms">
+        <strong>Terms & Conditions</strong>
+        <div>{{notes}}</div>
+      </div>
+      <div class="sticky-notification">
+        Download app to explore catalog & unlock exclusive offers!
+      </div>
+    </div>
+  </script>
+
+  <script type="module" src="script.js"></script>
+</body>
+</html>
