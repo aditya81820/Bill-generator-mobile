@@ -1,0 +1,297 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 24px;
+    background: #f9fafb;
+    color: #111;
+}
+
+.invoice-wrapper {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 32px;
+    page-break-after: always;
+    break-after: page;
+}
+
+.invoice-wrapper:last-of-type {
+    page-break-after: auto;
+    break-after: auto;
+}
+
+.logo {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 15px;
+}
+
+.muted {
+    font-size: 11px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 28px;
+    font-size: 9px;
+}
+
+th {
+    text-align: left;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #080808;
+    border: 1.5px solid #000;
+    padding: 4px;
+    background-color: #f2f2f2;
+}
+
+td {
+    padding: 6px;
+    font-size: 8px;
+    border: 1.5px solid #000;
+}
+
+thead tr:first-child th {
+    border-top: 2px solid #000;
+}
+
+tbody tr:last-child td {
+    border-bottom: 2px solid #000;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+    width: 8%;
+}
+
+th:first-child,
+td:first-child {
+    border-left: none;
+}
+
+th:last-child,
+td:last-child {
+    border-right: none;
+}
+
+#col-item,
+.col-item {
+    width: 30%;
+}
+
+#col-total,
+.col-total {
+    width: 35%;
+}
+
+.table-total-label {
+    text-align: right;
+    font-weight: 600;
+}
+
+.totals {
+    margin-top: 24px;
+    width: 280px;
+    margin-left: auto;
+    font-size: 9px;
+}
+
+.totals div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.totals span strong {
+    font-size: 9px;
+}
+
+.notes {
+    margin-top: 32px;
+    padding: 16px;
+    background: #f1f5f9;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #475569;
+}
+
+.flex-top {
+    align-items: flex-start;
+    margin-bottom: 20px;
+}
+
+.flex-align-start {
+    align-items: flex-start;
+}
+
+.logo-image {
+    height: 64px;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.tax-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.tax-subtitle {
+    margin-top: 4px;
+    font-size: 12px;
+}
+
+.invoice-heading {
+    font-size: 32px;
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.mt-8 {
+    margin-top: 8px;
+}
+
+.mt-16 {
+    margin-top: 16px;
+}
+
+.grid-spacing {
+    margin-top: 5px;
+}
+
+.grid-bill-ship {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.bill-ship-details {
+    font-size: 9px;
+}
+
+.bill-ship-details .muted {
+    font-size: 9px;
+}
+
+.bill-ship-details .section-title {
+    font-size: 9px;
+    font-weight: 600;
+}
+
+.section-title {
+    margin-bottom: 8px;
+}
+
+.grand-total {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 8px;
+}
+
+.invoice-meta {
+    text-align: right;
+    font-size: 9px;
+}
+
+.invoice-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 4px;
+}
+
+.invoice-meta-row:last-child {
+    border-bottom: none;
+}
+
+.totals-separator {
+    border-top: 2px solid #000;
+    width: 100%;
+}
+
+.tax-breakup-table {
+    width: 90%;
+    margin-top: 0px;
+    border-collapse: collapse;
+    font-size: 6.5px;
+}
+
+.tax-breakup-table th,
+.tax-breakup-table td {
+    border-left: none;
+    border-right: none;
+    border-bottom: 1px solid #000;
+    padding: 4px 6px;
+    font-size: 8px;
+}
+
+.tax-breakup-table tbody tr:last-child td {
+    border-bottom: 1px solid #000;
+}
+
+.tax-breakup-table thead th {
+    background-color: #ffffff;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    line-height: 1.1;
+}
+
+.tax-breakup-table thead tr:first-child th {
+    border-top: none !important;
+}
+
+.tax-breakup-table th:first-child,
+.tax-breakup-table td:first-child {
+    text-align: left;
+}
+
+.amount-in-words {
+    margin-top: 8px;
+    font-size: 9px;
+}
+
+.amount-in-words strong {
+    font-weight: 600;
+}
+
+.full-width-line {
+    margin-top: 4px;
+    border-top: 1px solid #bcbcbc;
+    width: 100%;
+}
+
+.signature-block {
+    margin-top: 16px;
+    text-align: right;
+    font-size: 8px;
+    line-height: 1.4;
+}
+
+.footer-note {
+    margin-top: 16px;
+    text-align: left;
+    font-size: 8px;
+    line-height: 1.4;
+}

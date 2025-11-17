@@ -80,7 +80,6 @@ export async function downloadCustomPDF(title, htmlContent) {
       }
       isFirstPage = false;
 
-      // Draw each invoice on its own page, anchored at top
       const y = 0;
       pdf.addImage(imgData, 'PNG', 0, y, imgWidth, imgHeight);
     }
